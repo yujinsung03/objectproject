@@ -6,19 +6,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class page2panel3 extends JPanel {
+public class page2panel25 extends JPanel {
 	ImageIcon img;
 	JButton b1 = new JButton("매장 설명");
 	JButton b2 = new JButton("약도");
-	JLabel label = new JLabel("난닝구");
 	
-	public page2panel3() {	
-		label.setBounds(2, 240, 250, 30);
-		label.setBackground(Color.GREEN);
-		label.setOpaque(true);
-		add(label);
-		
-		img = new ImageIcon("nan.jpg");
+	public page2panel25() {	
+		img = new ImageIcon("nike.png");
 		JLabel imgLabel = new JLabel(img);
 		imgLabel.setBounds(2, 2, 250, 250);
 		add(imgLabel);
@@ -35,3 +29,4 @@ public class page2panel3 extends JPanel {
 		setVisible(true);
 	}
 }
+

@@ -18,28 +18,28 @@ public class thirdpage extends JPanel{
         prevPageButton.addActionListener(e -> frame.showSecondPage());
         add(prevPageButton);
         
-        JPanel panel = new page2panel2();
-        panel.setBounds(150, 30, 254, 310);
+        JPanel panel = new page2panel18();
+        panel.setBounds(150, 50, 254, 310);
 
-        JPanel panel2 = new page2panel3();
+        JPanel panel2 = new page2panel19();
         panel2.setBounds(470, 50, 254, 310);
 
-        JPanel panel3 = new page2panel4();
+        JPanel panel3 = new page2panel20();
         panel3.setBounds(800, 50, 254, 310);
 
-        JPanel panel4 = new page2panel5();
+        JPanel panel4 = new page2panel21();
         panel4.setBounds(1130, 50, 254, 310);
 
-        JPanel panel5 = new page2panel6();
+        JPanel panel5 = new page2panel22();
         panel5.setBounds(150, 400, 254, 310);
 
-        JPanel panel6 = new page2panel7();
+        JPanel panel6 = new page2panel23();
         panel6.setBounds(470, 400, 254, 310);
 
-        JPanel panel7 = new page2panel8();
+        JPanel panel7 = new page2panel24();
         panel7.setBounds(800, 400, 254, 310);
 
-        JPanel panel8 = new page2panel9();
+        JPanel panel8 = new page2panel25();
         panel8.setBounds(1130, 400, 254, 310);
 
         setVisible(true);
