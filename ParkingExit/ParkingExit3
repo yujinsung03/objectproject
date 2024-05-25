@@ -1,0 +1,155 @@
+package 객체지향기말;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class ParkingExit3 {
+    private static final List<String> vehicles = Arrays.asList("12가 4599", "23가 4599", "34나 1234", "45다 5678");
+    private static final StringBuilder vehicleNumber = new StringBuilder();
+    private static DefaultListModel<String> exitListModel = new DefaultListModel<>();
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Exit Request");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1070, 700); // 프레임 크기 조정
+
+        // 배경 이미지 패널
+        BackgroundPanel panel = new BackgroundPanel(new ImageIcon("background.jpg").getImage());
+        panel.setLayout(null);
+
+        // 출차 이미지
+        JLabel exitingLabel = new JLabel();
+        exitingLabel.setIcon(new ImageIcon("C:\\객체2024\\0034.png"));
+        exitingLabel.setBounds(20, 50, 650, 80); // 이미지 크기와 위치 조정
+        panel.add(exitingLabel);
+
+        // 출차된 차량 리스트
+        JList<String> exitList = new JList<>(exitListModel);
+        JScrollPane scrollPane = new JScrollPane(exitList);
+        scrollPane.setBounds(20, 150, 650, 450); // 위치와 크기 조정
+        panel.add(scrollPane);
+
+        // 번호 입력 영역
+        JLabel numberLabel = new JLabel("Number:");
+        numberLabel.setBounds(700, 100, 80, 25); // 위치 조정
+        panel.add(numberLabel);
+
+        JLabel vehicleLabel = new JLabel("");
+        vehicleLabel.setBounds(770, 100, 150, 25); // 위치와 크기 조정
+        vehicleLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel.add(vehicleLabel);
+
+        JButton clearButton = new JButton("Clear");
+        clearButton.setBounds(920, 100, 80, 25); // 위치와 크기 조정
+        panel.add(clearButton);
+
+        clearButton.addActionListener(e -> {
+            vehicleNumber.setLength(0);
+            vehicleLabel.setText("");
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(4, 3, 10, 10)); // 버튼 간격 조정 및 행 추가
+        buttonPanel.setBounds(700, 150, 280, 400); // 위치와 크기 조정
+
+        ActionListener numberButtonListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (vehicleNumber.length() < 4) {
+                    vehicleNumber.append(e.getActionCommand());
+                    vehicleLabel.setText(vehicleNumber.toString());
+                }
+            }
+        };
+
+        for (int i = 1; i <= 9; i++) {
+            JButton button = new JButton(String.valueOf(i));
+            button.setFont(new Font("Serif", Font.BOLD, 20)); // 버튼 글꼴 크기 조정
+            button.addActionListener(numberButtonListener);
+            buttonPanel.add(button);
+        }
+
+        // 0 버튼 추가
+        JButton zeroButton = new JButton("0");
+        zeroButton.setFont(new Font("Serif", Font.BOLD, 20)); // 버튼 글꼴 크기 조정
+        zeroButton.addActionListener(numberButtonListener);
+        buttonPanel.add(zeroButton);
+
+        // 빈 버튼 추가
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(new JLabel(""));
+
+        panel.add(buttonPanel);
+
+        JButton searchButton = new JButton("Search");
+        searchButton.setBounds(700, 560, 300, 40); // 위치와 크기 조정
+        searchButton.setFont(new Font("Serif", Font.BOLD, 20)); // 글꼴 크기 조정
+        panel.add(searchButton);
+
+        searchButton.addActionListener(e -> {
+            if (vehicleNumber.length() == 4) {
+                List<String> matchedVehicles = findVehiclesWithNumber(vehicleNumber.toString());
+                if (matchedVehicles.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Cannot find the number: " + vehicleNumber);
+                } else if (matchedVehicles.size() == 1) {
+                    JOptionPane.showMessageDialog(frame, "Exit completed: Vehicle number " + matchedVehicles.get(0));
+                    exitListModel.addElement(matchedVehicles.get(0));
+                } else {
+                    String selectedVehicle = chooseVehicleToExit(matchedVehicles);
+                    if (selectedVehicle != null) {
+                        JOptionPane.showMessageDialog(frame, "Exit completed: Vehicle number " + selectedVehicle);
+                        exitListModel.addElement(selectedVehicle);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please enter a 4-digit number.");
+            }
+        });
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+
+    private static List<String> findVehiclesWithNumber(String number) {
+        List<String> matchedVehicles = new ArrayList<>();
+        for (String vehicle : vehicles) {
+            if (vehicle.contains(number)) {
+                matchedVehicles.add(vehicle);
+            }
+        }
+        return matchedVehicles;
+    }
+
+    private static String chooseVehicleToExit(List<String> matchedVehicles) {
+        return (String) JOptionPane.showInputDialog(
+                null,
+                "Select the vehicle to exit:",
+                "Vehicle Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                matchedVehicles.toArray(),
+                matchedVehicles.get(0)
+        );
+    }
+
+    static class BackgroundPanel extends JPanel {
+        private Image image;
+
+        public BackgroundPanel(Image image) {
+            this.image = image;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (image != null) {
+                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+}
