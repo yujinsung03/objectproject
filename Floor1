@@ -1,5 +1,4 @@
 package object8team;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -284,6 +283,8 @@ public class Floor1 extends JFrame {
             blinkTimer.stop();
         }
 
+        Color originalColor = button.getBackground(); // 원래 버튼의 배경색 저장
+
         blinkTimer = new Timer(500, new ActionListener() { // blinkTimer를 로컬 변수가 아닌 클래스 변수로 사용
             private boolean isOriginalColor = true;
             private int elapsedSeconds = 0;
@@ -291,16 +292,16 @@ public class Floor1 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (elapsedSeconds >= durationSeconds) {
-                    button.setBackground(button.getBackground());
+                    button.setBackground(originalColor); // 원래 배경색으로 복원
                     button.setContentAreaFilled(true);
                     blinkTimer.stop();
                     return;
                 }
 
                 if (isOriginalColor) {
-                    button.setBackground(Color.YELLOW);
+                    button.setBackground(Color.WHITE);
                 } else {
-                    button.setBackground(button.getBackground());
+                    button.setBackground(originalColor); // 원래 배경색으로 복원
                 }
                 button.setContentAreaFilled(!isOriginalColor);
                 isOriginalColor = !isOriginalColor;
@@ -309,6 +310,7 @@ public class Floor1 extends JFrame {
         });
 
         blinkTimer.start();
+        button.setBackground(Color.WHITE);
     }
 
     private class StoreButtonListener implements ActionListener {
