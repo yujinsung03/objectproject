@@ -1,8 +1,6 @@
-package object8team;
+package MallMap;
 
 import javax.swing.*;
-
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +42,7 @@ public class Floor2 extends JFrame {
 
         // Create and add the menubuttonpanel
         menubuttonpanel panelCreator = new menubuttonpanel();
-        JPanel menuPanel = panelCreator.createPanel(null);
+        JPanel menuPanel = panelCreator.createPanel();
         add(menuPanel, BorderLayout.EAST);
 
         buttonPanel = new JPanel();
@@ -75,39 +73,21 @@ public class Floor2 extends JFrame {
             }
         });
 
-
         restroomLocation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isBlinkingStorage) {
-                    stopBlinking(btnStorage);
-                    isBlinkingStorage = false;
-                }
-                isBlinkingRestroom = !isBlinkingRestroom;
-                if (isBlinkingRestroom) {
-                    startBlinking(btnRestroom, 7);
-                } else {
-                    stopBlinking(btnRestroom);
-                }
+                startBlinking(btnRestroom, 7);
             }
         });
+    
 
         boxLocation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isBlinkingRestroom) {
-                    stopBlinking(btnRestroom);
-                    isBlinkingRestroom = false;
-                }
-                isBlinkingStorage = !isBlinkingStorage;
-                if (isBlinkingStorage) {
-                    startBlinking(btnStorage, 7);
-                } else {
-                    stopBlinking(btnStorage);
-                }
+                startBlinking(btnStorage, 7);
             }
+        
         });
-
 
         buttonPanel.add(btnFirstFloor);
         buttonPanel.add(btnSecondFloor);
@@ -197,6 +177,8 @@ public class Floor2 extends JFrame {
         btnStorage.setBounds(offsetX + spacing , offsetY + spacing, 50, 50); // Adjusted position
         mapPanel.add(btnStorage);
         
+        
+        
         // Draw lines to separate the buttons
         int lineThickness = 15; // Increased line thickness
         mapPanel.add(createSeparator(offsetX, offsetY + buttonSize, buttonSize, lineThickness));
@@ -237,50 +219,50 @@ public class Floor2 extends JFrame {
     }
 
    	private void addStorePanels() {   
-   		ImageIcon adidasImage = new ImageIcon("img/adidas.png");
+   		ImageIcon adidasImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/adidas.png");
    		Image img1 = adidasImage.getImage();
     	Image newImg1 = img1.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
     	adidasImage = new ImageIcon(newImg1);
 	    mainPanel2.add(createStorePanel1(adidasImage, "Aidas"), "Adidas");
 	   
 	      
-	   ImageIcon nikeImage = new ImageIcon("img/nike.png");
+	   ImageIcon nikeImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/nike.png");
 		Image img2 = nikeImage.getImage();
     	Image newImg2 = img2.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
     	nikeImage = new ImageIcon(newImg2);
 	   mainPanel2.add(createStorePanel2(nikeImage, "This is 나이키 store."), "Nike");
 	   
-	   ImageIcon NGImage = new ImageIcon("img/ng.png");
+	   ImageIcon NGImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/ng.png");
 	   Image img3 = NGImage.getImage();
 	   Image newImg3 = img3.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
 	   NGImage = new ImageIcon(newImg3);
 	   mainPanel2.add(createStorePanel3(NGImage, "This is National Geographic store."), "National Geographic");
 	   
-	   ImageIcon NBImage = new ImageIcon("/img/nb.png");
+	   ImageIcon NBImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/nb.png");
 	   Image img4 = NBImage.getImage();
 	   Image newImg4 = img4.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
 	   NBImage = new ImageIcon(newImg4);
 	   mainPanel2.add(createStorePanel4(NBImage, "This is 뉴발란스 store."), "New Balance");
 	   
-	   ImageIcon disImage = new ImageIcon("img/discovery.png");
+	   ImageIcon disImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/discovery.png");
 	   Image img5 = disImage.getImage();
 	   Image newImg5 = img5.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
 	   disImage = new ImageIcon(newImg5);
 	   mainPanel2.add(createStorePanel5(disImage, "This is Discovery store."), "Discovery");
 	   
-	   ImageIcon zaraImage = new ImageIcon("img/zara.png");
+	   ImageIcon zaraImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/zara.png");
 	   Image img6 = zaraImage.getImage();
 	   Image newImg6 = img6.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
 	   zaraImage = new ImageIcon(newImg6);
 	   mainPanel2.add(createStorePanel6(zaraImage, "This is ZARA store."), "ZARA");
 	   
-	   ImageIcon infoImage = new ImageIcon("img/information.png");
+	   ImageIcon infoImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/information.png");
 	   Image img7 = infoImage.getImage();
 	   Image newImg7 = img7.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
 	   infoImage = new ImageIcon(newImg7);
 	   mainPanel2.add(createStorePanel7(infoImage, "This is information desk."), "information");
 	  
-	   ImageIcon lacostImage = new ImageIcon("img/lacoste.png");
+	   ImageIcon lacostImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/lacoste.png");
 	   Image img8 = lacostImage.getImage();
 	   Image newImg8 = img8.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
 	   lacostImage = new ImageIcon(newImg8);
@@ -416,7 +398,7 @@ public class Floor2 extends JFrame {
    
     private JButton createCustomButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font("나눔 고딕", Font.PLAIN, 20));
+        button.setFont(new Font("Arial", Font.PLAIN, 20));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         return button;
@@ -447,6 +429,7 @@ public class Floor2 extends JFrame {
         separator.setBounds(x, y, width, height);
         return separator;
     }
+
     private void startBlinking(JButton button, int duration) {
         Timer blinkTimer = new Timer(500, new ActionListener() {
             private int counter = 0;
@@ -517,6 +500,7 @@ public class Floor2 extends JFrame {
             }
         }
     }
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
