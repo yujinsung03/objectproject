@@ -1,4 +1,4 @@
-package object8team;
+package MallMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class Floor1 extends JFrame {
     private Timer blinkTimerRestroom, blinkTimerStorage;
     private boolean isBlinkingRestroom = false;
     private boolean isBlinkingStorage = false;
-    
+
     public Floor1() {
         setTitle("Floor1");
         setSize(2000, 1000);
@@ -42,7 +42,7 @@ public class Floor1 extends JFrame {
 
         // Create and add the menubuttonpanel
         menubuttonpanel panelCreator = new menubuttonpanel();
-        JPanel menuPanel = panelCreator.createPanel(this);
+        JPanel menuPanel = panelCreator.createPanel();
         add(menuPanel, BorderLayout.EAST);
 
         buttonPanel = new JPanel();
@@ -76,33 +76,17 @@ public class Floor1 extends JFrame {
         restroomLocation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isBlinkingStorage) {
-                    stopBlinking(btnStorage);
-                    isBlinkingStorage = false;
-                }
-                isBlinkingRestroom = !isBlinkingRestroom;
-                if (isBlinkingRestroom) {
-                    startBlinking(btnRestroom, 7);
-                } else {
-                    stopBlinking(btnRestroom);
-                }
+                startBlinking(btnRestroom, 7);
             }
         });
+    
 
         boxLocation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isBlinkingRestroom) {
-                    stopBlinking(btnRestroom);
-                    isBlinkingRestroom = false;
-                }
-                isBlinkingStorage = !isBlinkingStorage;
-                if (isBlinkingStorage) {
-                    startBlinking(btnStorage, 7);
-                } else {
-                    stopBlinking(btnStorage);
-                }
+                startBlinking(btnStorage, 7);
             }
+        
         });
 
         buttonPanel.add(btnFirstFloor);
@@ -188,8 +172,9 @@ public class Floor1 extends JFrame {
         Font BoxFont = new Font(boxFont.getName(), boxFont.getStyle(), 7); // Adjust the font size here
         btnStorage.setFont(BoxFont);
         btnStorage.addActionListener(new StoreButtonListener("Storage"));
-        btnStorage.setBounds(offsetX + 3 * spacing, offsetY + spacing, 50, 50); // Adjusted position
+        btnStorage.setBounds(offsetX + spacing , offsetY + spacing, 50, 50); // Adjusted position
         mapPanel.add(btnStorage);
+     
         
         // Draw lines to separate the buttons
         int lineThickness = 15; // Increased line thickness
@@ -201,53 +186,87 @@ public class Floor1 extends JFrame {
         mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
         mapPanel.add(createSeparator(offsetX + 2 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
         mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
-        
+        mapPanel.add(createSeparator(offsetX + 4 * spacing, offsetY + buttonSize, 50, lineThickness));
+
         return mapPanel;
     }
-    
+
+
     private JPanel createFloorNavigationPanel() {
         JPanel floorNavPanel = new JPanel();
         JButton firstFloorBtn = new JButton("1층");
         JButton secondFloorBtn = new JButton("2층");
         JButton thirdFloorBtn = new JButton("3층");
 
-        firstFloorBtn.addActionListener(e -> new Floor1().setVisible(true));
+        firstFloorBtn.addActionListener(e -> cardLayout.show(mainPanel1, "Map"));
         secondFloorBtn.addActionListener(e -> new Floor2().setVisible(true));
         thirdFloorBtn.addActionListener(e -> new Floor3().setVisible(true));
 
         floorNavPanel.add(firstFloorBtn);
         floorNavPanel.add(secondFloorBtn);
         floorNavPanel.add(thirdFloorBtn);
-        
+
         return floorNavPanel;
+    }
+    
+   	private JPanel createFirstFloorPanel() {
+        JPanel panel = new JPanel();
+        return panel;
     }
 
     private void addStorePanels() {
-        JPanel panel8Seconds = createStorePanel("에잇세컨즈", "에잇세컨즈의 설명입니다.");
-        mainPanel1.add(panel8Seconds, "8Seconds");
+        	
+        	ImageIcon eightSecondsImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/eightsSeconds.png");
+        	Image img = eightSecondsImage.getImage();
+        	Image newImg = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	eightSecondsImage = new ImageIcon(newImg);
+        	mainPanel1.add(createStorePanel1(eightSecondsImage, "8Seconds"), "8Seconds");
+        	
+        	ImageIcon mixxoImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/mixxo.png");
+        	Image img2 = eightSecondsImage.getImage();
+        	Image newImg2 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	mixxoImage = new ImageIcon(newImg2);
+        	mainPanel1.add(createStorePanel2(mixxoImage, "Mixxo"), "Mixxo");
+        	
+        	ImageIcon mooinImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/mooin.png");
+        	Image img3 = mooinImage.getImage();
+        	Image newImg3 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	mooinImage = new ImageIcon(newImg3);
+        	mainPanel1.add(createStorePanel3(mooinImage, "Mooin"), "Mooin");
+        	
+        	ImageIcon HMImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/hm.png");
+        	Image img4 = HMImage.getImage();
+        	Image newImg4 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	HMImage = new ImageIcon(newImg4);
+        	mainPanel1.add(createStorePanel4(HMImage, "HM"), "HM");
+        	
+        	ImageIcon minigoldImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/minigold.png");
+        	Image img5 = minigoldImage.getImage();
+        	Image newImg5 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	minigoldImage = new ImageIcon(newImg5);
+        	mainPanel1.add(createStorePanel5(minigoldImage, "Minigold"), "Minigold");
+        	
+        	ImageIcon shoopenImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/shoopen.png");
+        	Image img6 = shoopenImage.getImage();
+        	Image newImg6 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	shoopenImage = new ImageIcon(newImg5);
+        	mainPanel1.add(createStorePanel6(shoopenImage, "Shoopen"), "Shoopen");
+        	
+        	ImageIcon girlsImage = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/66girls.png");
+        	Image img7 = girlsImage.getImage();
+        	Image newImg7 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	girlsImage = new ImageIcon(newImg7);
+        	mainPanel1.add(createStorePanel6(girlsImage, "66Girls"), "66Girls");
+        	
+        	ImageIcon nanning9Image = new ImageIcon("/Users/choijiwon/Desktop/3-1 OOP/MallMap/MallMap/src/img/nanning9.png");
+        	Image img8 = nanning9Image.getImage();
+        	Image newImg8 = img.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+        	nanning9Image = new ImageIcon(newImg8);
+        	mainPanel1.add(createStorePanel7(nanning9Image, "Nanning9"), "Nanning9");
 
-        JPanel panelMixxo = createStorePanel("미쏘", "미쏘의 설명입니다.");
-        mainPanel1.add(panelMixxo, "Mixxo");
+        }
 
-        JPanel panelMooin = createStorePanel("무인양품", "무인양품의 설명입니다.");
-        mainPanel1.add(panelMooin, "Mooin");
 
-        JPanel panelHM = createStorePanel("H&M", "H&M의 설명입니다.");
-        mainPanel1.add(panelHM, "HM");
-
-        JPanel panelMinigold = createStorePanel("미니골드", "미니골드의 설명입니다.");
-        mainPanel1.add(panelMinigold, "Minigold");
-
-        JPanel panelShoopen = createStorePanel("슈펜", "슈펜의 설명입니다.");
-        mainPanel1.add(panelShoopen, "Shoopen");
-
-        JPanel panel66Girls = createStorePanel("육육걸즈", "육육걸즈의 설명입니다.");
-        mainPanel1.add(panel66Girls, "66Girls");
-
-        JPanel panelNanning9 = createStorePanel("난닝구", "난닝구의 설명입니다.");
-        mainPanel1.add(panelNanning9, "Nanning9");
-    }
-        
         private JPanel createStorePanel1(ImageIcon eightsecondImage, String str1) {
             JPanel panel = new JPanel();
             panel.add(new JLabel(eightsecondImage));
@@ -381,34 +400,15 @@ public class Floor1 extends JFrame {
    		      }
    		  });
             return panel;
+        }
         
-    }
-
-    private JPanel createStorePanel(String storeName, String description) {
-    	
-        JPanel storePanel = new JPanel(new BorderLayout());
-
-        JLabel nameLabel = new JLabel(storeName, JLabel.CENTER);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-
-        JTextArea descriptionArea = new JTextArea(description);
-        descriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        descriptionArea.setEditable(false);
-        descriptionArea.setLineWrap(true);
-        descriptionArea.setWrapStyleWord(true);
-
-        storePanel.add(nameLabel, BorderLayout.NORTH);
-        storePanel.add(new JScrollPane(descriptionArea), BorderLayout.CENTER);
-        
-        
-
-        return storePanel;
-    }
+    
 
     private JButton createCustomButton(String text) {
         JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(150, 150));
+        button.setFont(new Font("Arial", Font.PLAIN, 20));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         return button;
     }
 
@@ -416,24 +416,27 @@ public class Floor1 extends JFrame {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(Color.LIGHT_GRAY);
+                button.setFont(button.getFont().deriveFont(Font.BOLD, 26f)); // Larger font size for dramatic effect
+                button.setBackground(new Color(158, 188, 219)); // Highlight the button
+                button.setOpaque(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(UIManager.getColor("control"));
+                button.setFont(button.getFont().deriveFont(Font.PLAIN, 20f)); // Revert font size
+                button.setBackground(UIManager.getColor("Button.background")); // Revert button color
+                button.setOpaque(false);
             }
         });
     }
 
-    private JPanel createSeparator(int x, int y, int width, int height) {
-        JPanel separator = new JPanel();
+    private JLabel createSeparator(int x, int y, int width, int height) {
+        JLabel separator = new JLabel();
+        separator.setOpaque(true);
         separator.setBackground(Color.BLACK);
         separator.setBounds(x, y, width, height);
         return separator;
-    }
-
-    private void startBlinking(JButton button, int duration) {
+    }  private void startBlinking(JButton button, int duration) {
         Timer blinkTimer = new Timer(500, new ActionListener() {
             private int counter = 0;
             
@@ -503,13 +506,14 @@ public class Floor1 extends JFrame {
             }
         }
     }
+    
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Floor1().setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            Floor1 floor1 = new Floor1();
+            floor1.setVisible(true);
         });
     }
 }
+
+
