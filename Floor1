@@ -1,0 +1,330 @@
+package object8team;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class Floor1 extends JFrame {
+    private CardLayout cardLayout;
+    JPanel mainPanel1;
+    JPanel buttonPanel;
+    private JButton btnFirstFloor, btnSecondFloor, btnThirdFloor;
+    private JButton btnRestroom, btnStorage; // btnStorage 추가
+    private Timer blinkTimer;
+    private boolean isBlinkingRestroom = false;
+    private boolean isBlinkingStorage = false;
+
+    public Floor1() {
+        setTitle("Floor1");
+        setSize(2000, 1000);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        JLabel headerLabel = new JLabel("First Floor", JLabel.CENTER);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        headerLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        add(headerLabel, BorderLayout.NORTH);
+
+        cardLayout = new CardLayout();
+        mainPanel1 = new JPanel(cardLayout);
+
+        JPanel mapPanel = createMapPanel();
+        mainPanel1.add(mapPanel, "Map");
+
+        addStorePanels();
+
+        add(mainPanel1, BorderLayout.CENTER);
+        add(createFloorNavigationPanel(), BorderLayout.SOUTH);
+
+        // Create and add the menubuttonpanel
+        menubuttonpanel panelCreator = new menubuttonpanel();
+        JPanel menuPanel = panelCreator.createPanel(this);
+        add(menuPanel, BorderLayout.EAST);
+
+        buttonPanel = new JPanel();
+        btnFirstFloor = new JButton("1층");
+        btnSecondFloor = new JButton("2층");
+        btnThirdFloor = new JButton("3층");
+        JButton restroomLocation = new JButton("화장실 위치 안내");
+        JButton boxLocation = new JButton("물품보관함 위치 안내");
+
+        btnFirstFloor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Floor1().setVisible(true);
+            }
+        });
+
+        btnSecondFloor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Floor2().setVisible(true);
+            }
+        });
+
+        btnThirdFloor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Floor3().setVisible(true);
+            }
+        });
+
+        restroomLocation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startBlinking(btnRestroom, 7);
+            }
+        });
+
+        boxLocation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startBlinking(btnStorage, 7);
+            }
+        });
+
+        buttonPanel.add(btnFirstFloor);
+        buttonPanel.add(btnSecondFloor);
+        buttonPanel.add(btnThirdFloor);
+        buttonPanel.add(restroomLocation);
+        buttonPanel.add(boxLocation);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+        cardLayout.show(mainPanel1, "Map");
+    }
+
+    private JPanel createMapPanel() {
+        JPanel mapPanel = new JPanel();
+        mapPanel.setLayout(null); // Use absolute positioning for custom layout
+
+        // Create buttons for each store
+        int buttonSize = 150; // Increased button size
+        int spacing = 150; // Adjust spacing
+        int offsetX = 300; // Move to the right
+        int offsetY = 100; // Move down
+
+        JButton btn8Seconds = createCustomButton("에잇세컨즈");
+        btn8Seconds.setBounds(offsetX, offsetY, buttonSize, buttonSize);
+        btn8Seconds.addActionListener(new StoreButtonListener("8Seconds"));
+        applyRollOverEffect(btn8Seconds); // Apply dramatic effect
+        mapPanel.add(btn8Seconds);
+
+        JButton btnMixxo = createCustomButton("미쏘");
+        btnMixxo.setBounds(offsetX, offsetY + spacing, buttonSize, buttonSize);
+        btnMixxo.addActionListener(new StoreButtonListener("Mixxo"));
+        applyRollOverEffect(btnMixxo); // Apply dramatic effect
+        mapPanel.add(btnMixxo);
+
+        JButton btnMooin = createCustomButton("무인양품");
+        btnMooin.setBounds(offsetX, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnMooin.addActionListener(new StoreButtonListener("Mooin"));
+        applyRollOverEffect(btnMooin); // Apply dramatic effect
+        mapPanel.add(btnMooin);
+
+        JButton btnHM = createCustomButton("H&M");
+        btnHM.setBounds(offsetX + spacing, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnHM.addActionListener(new StoreButtonListener("HM"));
+        applyRollOverEffect(btnHM); // Apply dramatic effect
+        mapPanel.add(btnHM);
+
+        JButton btnMinigold = createCustomButton("미니골드");
+        btnMinigold.setBounds(offsetX + 2 * spacing, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnMinigold.addActionListener(new StoreButtonListener("Minigold"));
+        applyRollOverEffect(btnMinigold); // Apply dramatic effect
+        mapPanel.add(btnMinigold);
+
+        JButton btnShoopen = createCustomButton("슈펜");
+        btnShoopen.setBounds(offsetX + 3 * spacing, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnShoopen.addActionListener(new StoreButtonListener("Shoopen"));
+        applyRollOverEffect(btnShoopen); // Apply dramatic effect
+        mapPanel.add(btnShoopen);
+
+        JButton btn66 = createCustomButton("육육걸즈");
+        btn66.setBounds(offsetX + 2 * spacing, offsetY, buttonSize, buttonSize);
+        btn66.addActionListener(new StoreButtonListener("66Girls"));
+        applyRollOverEffect(btn66); // Apply dramatic effect
+        mapPanel.add(btn66);
+
+        JButton btnNanning9 = createCustomButton("난닝구");
+        btnNanning9.setBounds(offsetX + 3 * spacing, offsetY, buttonSize, buttonSize);
+        btnNanning9.addActionListener(new StoreButtonListener("Nanning9"));
+        applyRollOverEffect(btnNanning9); // Apply dramatic effect
+        mapPanel.add(btnNanning9);
+
+        btnRestroom = createCustomButton("🚻");
+        btnRestroom.setBounds(offsetX + 4 * spacing, offsetY, 75, buttonSize); // Adjusted restroom size
+        Font buttonFont = btnRestroom.getFont();
+        Font newFont = new Font(buttonFont.getName(), buttonFont.getStyle(), 40);
+        btnRestroom.setFont(newFont);
+        btnRestroom.addActionListener(new StoreButtonListener("Restroom"));
+        applyRollOverEffect(btnRestroom);
+        mapPanel.add(btnRestroom);
+
+        btnStorage = createCustomButton("물품보관소");
+        Font boxFont = btnStorage.getFont();
+        Font BoxFont = new Font(boxFont.getName(), boxFont.getStyle(), 7); // Adjust the font size here
+        btnStorage.setFont(BoxFont);
+        btnStorage.setBounds(offsetX + 3 * spacing, offsetY + spacing, 50, 50); // Adjusted position
+        btnStorage.addActionListener(new StoreButtonListener("Storage")); // 추가된 부분
+        applyRollOverEffect(btnStorage); // 추가된 부분
+        mapPanel.add(btnStorage); // 추가된 부분
+
+        // Draw lines to separate the buttons
+        int lineThickness = 15; // Increased line thickness
+        mapPanel.add(createSeparator(offsetX, offsetY + buttonSize, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX, offsetY + buttonSize + spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 2 * spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 2 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 4 * spacing, offsetY + buttonSize, 50, lineThickness));
+
+        setVisible(true);
+        return mapPanel;
+    }
+
+    private JPanel createFloorNavigationPanel() {
+        JPanel floorNavPanel = new JPanel();
+        JButton firstFloorBtn = new JButton("1층");
+        JButton secondFloorBtn = new JButton("2층");
+        JButton thirdFloorBtn = new JButton("3층");
+
+        firstFloorBtn.addActionListener(e -> cardLayout.show(mainPanel1, "Map"));
+        secondFloorBtn.addActionListener(e -> new Floor2().setVisible(true));
+        thirdFloorBtn.addActionListener(e -> new Floor3().setVisible(true));
+
+        floorNavPanel.add(firstFloorBtn);
+        floorNavPanel.add(secondFloorBtn);
+        floorNavPanel.add(thirdFloorBtn);
+
+        return floorNavPanel;
+    }
+
+    private JButton createCustomButton(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(Color.WHITE);
+        button.setFocusPainted(false);
+        return button;
+    }
+
+    private void applyRollOverEffect(JButton button) {
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(Color.LIGHT_GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.WHITE);
+            }
+        });
+    }
+
+    private JComponent createSeparator(int x, int y, int width, int thickness) {
+        JPanel separator = new JPanel();
+        separator.setBackground(Color.BLACK);
+        separator.setBounds(x, y, width, thickness);
+        return separator;
+    }
+
+    private void addStorePanels() {
+        JPanel panel8Seconds = new JPanel();
+        panel8Seconds.add(new JLabel("8Seconds Store"));
+        mainPanel1.add(panel8Seconds, "8Seconds");
+
+        JPanel panelMixxo = new JPanel();
+        panelMixxo.add(new JLabel("Mixxo Store"));
+        mainPanel1.add(panelMixxo, "Mixxo");
+
+        JPanel panelMooin = new JPanel();
+        panelMooin.add(new JLabel("Mooin Store"));
+        mainPanel1.add(panelMooin, "Mooin");
+
+        JPanel panelHM = new JPanel();
+        panelHM.add(new JLabel("H&M Store"));
+        mainPanel1.add(panelHM, "HM");
+
+        JPanel panelMinigold = new JPanel();
+        panelMinigold.add(new JLabel("Minigold Store"));
+        mainPanel1.add(panelMinigold, "Minigold");
+
+        JPanel panelShoopen = new JPanel();
+        panelShoopen.add(new JLabel("Shoopen Store"));
+        mainPanel1.add(panelShoopen, "Shoopen");
+
+        JPanel panel66Girls = new JPanel();
+        panel66Girls.add(new JLabel("66Girls Store"));
+        mainPanel1.add(panel66Girls, "66Girls");
+
+        JPanel panelNanning9 = new JPanel();
+        panelNanning9.add(new JLabel("Nanning9 Store"));
+        mainPanel1.add(panelNanning9, "Nanning9");
+
+        JPanel panelRestroom = new JPanel();
+        panelRestroom.add(new JLabel("Restroom"));
+        mainPanel1.add(panelRestroom, "Restroom");
+
+        JPanel panelStorage = new JPanel();
+        panelStorage.add(new JLabel("Storage"));
+        mainPanel1.add(panelStorage, "Storage");
+    }
+
+    private void startBlinking(JButton button, int durationSeconds) {
+        if (blinkTimer != null && blinkTimer.isRunning()) {
+            blinkTimer.stop();
+        }
+
+        blinkTimer = new Timer(500, new ActionListener() { // blinkTimer를 로컬 변수가 아닌 클래스 변수로 사용
+            private boolean isOriginalColor = true;
+            private int elapsedSeconds = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (elapsedSeconds >= durationSeconds) {
+                    button.setBackground(button.getBackground());
+                    button.setContentAreaFilled(true);
+                    blinkTimer.stop();
+                    return;
+                }
+
+                if (isOriginalColor) {
+                    button.setBackground(Color.YELLOW);
+                } else {
+                    button.setBackground(button.getBackground());
+                }
+                button.setContentAreaFilled(!isOriginalColor);
+                isOriginalColor = !isOriginalColor;
+                elapsedSeconds++;
+            }
+        });
+
+        blinkTimer.start();
+    }
+
+    private class StoreButtonListener implements ActionListener {
+        private String storeName;
+
+        public StoreButtonListener(String storeName) {
+            this.storeName = storeName;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            cardLayout.show(mainPanel1, storeName);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Floor1());
+    }
+}
