@@ -1,4 +1,5 @@
 package object8team;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,11 +12,11 @@ public class Floor1 extends JFrame {
     JPanel mainPanel1;
     JPanel buttonPanel;
     private JButton btnFirstFloor, btnSecondFloor, btnThirdFloor;
-    private JButton btnRestroom, btnStorage; // btnStorage 추가
-    private Timer blinkTimer;
+    private JButton btnRestroom, btnStorage;
+    private Timer blinkTimerRestroom, blinkTimerStorage;
     private boolean isBlinkingRestroom = false;
     private boolean isBlinkingStorage = false;
-
+    
     public Floor1() {
         setTitle("Floor1");
         setSize(2000, 1000);
@@ -75,14 +76,32 @@ public class Floor1 extends JFrame {
         restroomLocation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startBlinking(btnRestroom, 7);
+                if (isBlinkingStorage) {
+                    stopBlinking(btnStorage);
+                    isBlinkingStorage = false;
+                }
+                isBlinkingRestroom = !isBlinkingRestroom;
+                if (isBlinkingRestroom) {
+                    startBlinking(btnRestroom, 7);
+                } else {
+                    stopBlinking(btnRestroom);
+                }
             }
         });
 
         boxLocation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startBlinking(btnStorage, 7);
+                if (isBlinkingRestroom) {
+                    stopBlinking(btnRestroom);
+                    isBlinkingRestroom = false;
+                }
+                isBlinkingStorage = !isBlinkingStorage;
+                if (isBlinkingStorage) {
+                    startBlinking(btnStorage, 7);
+                } else {
+                    stopBlinking(btnStorage);
+                }
             }
         });
 
@@ -95,6 +114,7 @@ public class Floor1 extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
         cardLayout.show(mainPanel1, "Map");
     }
+    
 
     private JPanel createMapPanel() {
         JPanel mapPanel = new JPanel();
@@ -162,16 +182,15 @@ public class Floor1 extends JFrame {
         btnRestroom.addActionListener(new StoreButtonListener("Restroom"));
         applyRollOverEffect(btnRestroom);
         mapPanel.add(btnRestroom);
-
-        btnStorage = createCustomButton("물품보관소");
+        
+        btnStorage = createCustomButton("Storage");
         Font boxFont = btnStorage.getFont();
         Font BoxFont = new Font(boxFont.getName(), boxFont.getStyle(), 7); // Adjust the font size here
         btnStorage.setFont(BoxFont);
+        btnStorage.addActionListener(new StoreButtonListener("Storage"));
         btnStorage.setBounds(offsetX + 3 * spacing, offsetY + spacing, 50, 50); // Adjusted position
-        btnStorage.addActionListener(new StoreButtonListener("Storage")); // 추가된 부분
-        applyRollOverEffect(btnStorage); // 추가된 부분
-        mapPanel.add(btnStorage); // 추가된 부분
-
+        mapPanel.add(btnStorage);
+        
         // Draw lines to separate the buttons
         int lineThickness = 15; // Increased line thickness
         mapPanel.add(createSeparator(offsetX, offsetY + buttonSize, buttonSize, lineThickness));
@@ -182,40 +201,218 @@ public class Floor1 extends JFrame {
         mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
         mapPanel.add(createSeparator(offsetX + 2 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
         mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
-        mapPanel.add(createSeparator(offsetX + 4 * spacing, offsetY + buttonSize, 50, lineThickness));
-
-        setVisible(true);
+        
         return mapPanel;
     }
-
+    
     private JPanel createFloorNavigationPanel() {
         JPanel floorNavPanel = new JPanel();
         JButton firstFloorBtn = new JButton("1층");
         JButton secondFloorBtn = new JButton("2층");
         JButton thirdFloorBtn = new JButton("3층");
 
-        firstFloorBtn.addActionListener(e -> cardLayout.show(mainPanel1, "Map"));
+        firstFloorBtn.addActionListener(e -> new Floor1().setVisible(true));
         secondFloorBtn.addActionListener(e -> new Floor2().setVisible(true));
         thirdFloorBtn.addActionListener(e -> new Floor3().setVisible(true));
 
         floorNavPanel.add(firstFloorBtn);
         floorNavPanel.add(secondFloorBtn);
         floorNavPanel.add(thirdFloorBtn);
-
+        
         return floorNavPanel;
+    }
+
+    private void addStorePanels() {
+        JPanel panel8Seconds = createStorePanel("에잇세컨즈", "에잇세컨즈의 설명입니다.");
+        mainPanel1.add(panel8Seconds, "8Seconds");
+
+        JPanel panelMixxo = createStorePanel("미쏘", "미쏘의 설명입니다.");
+        mainPanel1.add(panelMixxo, "Mixxo");
+
+        JPanel panelMooin = createStorePanel("무인양품", "무인양품의 설명입니다.");
+        mainPanel1.add(panelMooin, "Mooin");
+
+        JPanel panelHM = createStorePanel("H&M", "H&M의 설명입니다.");
+        mainPanel1.add(panelHM, "HM");
+
+        JPanel panelMinigold = createStorePanel("미니골드", "미니골드의 설명입니다.");
+        mainPanel1.add(panelMinigold, "Minigold");
+
+        JPanel panelShoopen = createStorePanel("슈펜", "슈펜의 설명입니다.");
+        mainPanel1.add(panelShoopen, "Shoopen");
+
+        JPanel panel66Girls = createStorePanel("육육걸즈", "육육걸즈의 설명입니다.");
+        mainPanel1.add(panel66Girls, "66Girls");
+
+        JPanel panelNanning9 = createStorePanel("난닝구", "난닝구의 설명입니다.");
+        mainPanel1.add(panelNanning9, "Nanning9");
+    }
+        
+        private JPanel createStorePanel1(ImageIcon eightsecondImage, String str1) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(eightsecondImage));
+            
+            JButton eightSecondButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(eightSecondButton, "매장 정보 바로가기");
+
+   	  		eightSecondButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel2(ImageIcon mixxoImage, String str2) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(mixxoImage));
+            
+            JButton mixxoButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(mixxoButton, "매장 정보 바로가기");
+
+   	  		mixxoButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel3(ImageIcon mooinImage, String str3) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(mooinImage));
+            
+            JButton mooinButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(mooinButton, "매장 정보 바로가기");
+
+   	  		mooinButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel4(ImageIcon HMImage, String str4) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(HMImage));
+            
+            JButton HMButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(HMButton, "매장 정보 바로가기");
+
+   	  		HMButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel5(ImageIcon minigoldImage, String str5) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(minigoldImage));
+            
+            JButton minigoldButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(minigoldButton, "매장 정보 바로가기");
+
+   	  		minigoldButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel6(ImageIcon shoopenImage, String str6) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(shoopenImage));
+            
+            JButton shoopenButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(shoopenButton, "매장 정보 바로가기");
+
+   	  		shoopenButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel7(ImageIcon  girlsImage, String str7) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel( girlsImage));
+            
+            JButton girlsButton = new JButton("매장 정보 바로가기");
+   	  		panel.add(girlsButton, "매장 정보 바로가기");
+
+   	  		girlsButton.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        }
+        
+        
+        private JPanel createStorePanel8(ImageIcon nanning9Image, String str7) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel( nanning9Image));
+            
+            JButton nanning9Button = new JButton("매장 정보 바로가기");
+   	  		panel.add(nanning9Button, "매장 정보 바로가기");
+
+   	  		nanning9Button.addActionListener(new ActionListener() {
+   		      @Override
+   		      public void actionPerformed(ActionEvent e) {
+   		          //경로 
+   		      }
+   		  });
+            return panel;
+        
+    }
+
+    private JPanel createStorePanel(String storeName, String description) {
+    	
+        JPanel storePanel = new JPanel(new BorderLayout());
+
+        JLabel nameLabel = new JLabel(storeName, JLabel.CENTER);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+
+        JTextArea descriptionArea = new JTextArea(description);
+        descriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        descriptionArea.setEditable(false);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+
+        storePanel.add(nameLabel, BorderLayout.NORTH);
+        storePanel.add(new JScrollPane(descriptionArea), BorderLayout.CENTER);
+        
+        
+
+        return storePanel;
     }
 
     private JButton createCustomButton(String text) {
         JButton button = new JButton(text);
-        button.setBackground(Color.WHITE);
-        button.setFocusPainted(false);
+        button.setPreferredSize(new Dimension(150, 150));
         return button;
     }
 
     private void applyRollOverEffect(JButton button) {
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(true);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -224,93 +421,50 @@ public class Floor1 extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(Color.WHITE);
+                button.setBackground(UIManager.getColor("control"));
             }
         });
     }
 
-    private JComponent createSeparator(int x, int y, int width, int thickness) {
+    private JPanel createSeparator(int x, int y, int width, int height) {
         JPanel separator = new JPanel();
         separator.setBackground(Color.BLACK);
-        separator.setBounds(x, y, width, thickness);
+        separator.setBounds(x, y, width, height);
         return separator;
     }
 
-    private void addStorePanels() {
-        JPanel panel8Seconds = new JPanel();
-        panel8Seconds.add(new JLabel("8Seconds Store"));
-        mainPanel1.add(panel8Seconds, "8Seconds");
-
-        JPanel panelMixxo = new JPanel();
-        panelMixxo.add(new JLabel("Mixxo Store"));
-        mainPanel1.add(panelMixxo, "Mixxo");
-
-        JPanel panelMooin = new JPanel();
-        panelMooin.add(new JLabel("Mooin Store"));
-        mainPanel1.add(panelMooin, "Mooin");
-
-        JPanel panelHM = new JPanel();
-        panelHM.add(new JLabel("H&M Store"));
-        mainPanel1.add(panelHM, "HM");
-
-        JPanel panelMinigold = new JPanel();
-        panelMinigold.add(new JLabel("Minigold Store"));
-        mainPanel1.add(panelMinigold, "Minigold");
-
-        JPanel panelShoopen = new JPanel();
-        panelShoopen.add(new JLabel("Shoopen Store"));
-        mainPanel1.add(panelShoopen, "Shoopen");
-
-        JPanel panel66Girls = new JPanel();
-        panel66Girls.add(new JLabel("66Girls Store"));
-        mainPanel1.add(panel66Girls, "66Girls");
-
-        JPanel panelNanning9 = new JPanel();
-        panelNanning9.add(new JLabel("Nanning9 Store"));
-        mainPanel1.add(panelNanning9, "Nanning9");
-
-        JPanel panelRestroom = new JPanel();
-        panelRestroom.add(new JLabel("Restroom"));
-        mainPanel1.add(panelRestroom, "Restroom");
-
-        JPanel panelStorage = new JPanel();
-        panelStorage.add(new JLabel("Storage"));
-        mainPanel1.add(panelStorage, "Storage");
-    }
-
-    private void startBlinking(JButton button, int durationSeconds) {
-        if (blinkTimer != null && blinkTimer.isRunning()) {
-            blinkTimer.stop();
-        }
-
-        Color originalColor = button.getBackground(); // 원래 버튼의 배경색 저장
-
-        blinkTimer = new Timer(500, new ActionListener() { // blinkTimer를 로컬 변수가 아닌 클래스 변수로 사용
-            private boolean isOriginalColor = true;
-            private int elapsedSeconds = 0;
-
+    private void startBlinking(JButton button, int duration) {
+        Timer blinkTimer = new Timer(500, new ActionListener() {
+            private int counter = 0;
+            
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (elapsedSeconds >= durationSeconds) {
-                    button.setBackground(originalColor); // 원래 배경색으로 복원
-                    button.setContentAreaFilled(true);
-                    blinkTimer.stop();
-                    return;
-                }
-
-                if (isOriginalColor) {
-                    button.setBackground(Color.WHITE);
+                if (counter < duration * 2) {
+                    button.setVisible(!button.isVisible());
+                    counter++;
                 } else {
-                    button.setBackground(originalColor); // 원래 배경색으로 복원
+                    button.setVisible(true);
+                    ((Timer) e.getSource()).stop();
                 }
-                button.setContentAreaFilled(!isOriginalColor);
-                isOriginalColor = !isOriginalColor;
-                elapsedSeconds++;
             }
         });
-
         blinkTimer.start();
-        button.setBackground(Color.WHITE);
+
+        if (button == btnRestroom) {
+            blinkTimerRestroom = blinkTimer;
+        } else if (button == btnStorage) {
+            blinkTimerStorage = blinkTimer;
+        }
+    }
+
+    private void stopBlinking(JButton button) {
+        if (button == btnRestroom && blinkTimerRestroom != null) {
+            blinkTimerRestroom.stop();
+            btnRestroom.setVisible(true);
+        } else if (button == btnStorage && blinkTimerStorage != null) {
+            blinkTimerStorage.stop();
+            btnStorage.setVisible(true);
+        }
     }
 
     private class StoreButtonListener implements ActionListener {
@@ -322,11 +476,40 @@ public class Floor1 extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            cardLayout.show(mainPanel1, storeName);
+            if (storeName.equals("Restroom")) {
+                if (isBlinkingStorage) {
+                    stopBlinking(btnStorage);
+                    isBlinkingStorage = false;
+                }
+                isBlinkingRestroom = !isBlinkingRestroom;
+                if (isBlinkingRestroom) {
+                    startBlinking(btnRestroom, 7);
+                } else {
+                    stopBlinking(btnRestroom);
+                }
+            } else if (storeName.equals("Storage")) {
+                if (isBlinkingRestroom) {
+                    stopBlinking(btnRestroom);
+                    isBlinkingRestroom = false;
+                }
+                isBlinkingStorage = !isBlinkingStorage;
+                if (isBlinkingStorage) {
+                    startBlinking(btnStorage, 7);
+                } else {
+                    stopBlinking(btnStorage);
+                }
+            } else {
+                cardLayout.show(mainPanel1, storeName);
+            }
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Floor1());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Floor1().setVisible(true);
+            }
+        });
     }
 }
