@@ -13,6 +13,7 @@ public class Floor2 extends JFrame {
     JPanel buttonPanel;
     private JButton btnFirstFloor, btnSecondFloor, btnThirdFloor;
     private JButton btnRestroom, btnStorage;
+    private Timer blinkTimer;  
     private Timer blinkTimerRestroom, blinkTimerStorage;
     private boolean isBlinkingRestroom = false;
     private boolean isBlinkingStorage = false;
