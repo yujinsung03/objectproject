@@ -1,0 +1,529 @@
+package object8team;
+
+import javax.swing.*;
+
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class Floor2 extends JFrame {
+    private CardLayout cardLayout;
+   JPanel mainPanel2;
+    JPanel buttonPanel;
+    private JButton btnFirstFloor, btnSecondFloor, btnThirdFloor;
+    private JButton btnRestroom, btnStorage;
+    private Timer blinkTimerRestroom, blinkTimerStorage;
+    private boolean isBlinkingRestroom = false;
+    private boolean isBlinkingStorage = false;
+
+    public Floor2() {
+        setTitle("Floor2");
+        setSize(2000, 1000);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        JLabel headerLabel = new JLabel("Second Floor", JLabel.CENTER);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        headerLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        add(headerLabel, BorderLayout.NORTH);
+
+        cardLayout = new CardLayout();
+        mainPanel2 = new JPanel(cardLayout);
+
+        JPanel mapPanel = createMapPanel();
+        mainPanel2.add(mapPanel, "Map");
+
+        addStorePanels();
+
+        add(mainPanel2, BorderLayout.CENTER);
+        add(createFloorNavigationPanel(), BorderLayout.SOUTH);
+
+        // Create and add the menubuttonpanel
+        menubuttonpanel panelCreator = new menubuttonpanel();
+        JPanel menuPanel = panelCreator.createPanel(null);
+        add(menuPanel, BorderLayout.EAST);
+
+        buttonPanel = new JPanel();
+        btnFirstFloor = new JButton("1층");
+        btnSecondFloor = new JButton("2층");
+        btnThirdFloor = new JButton("3층");
+        JButton restroomLocation = new JButton("화장실 위치 안내");
+        JButton boxLocation = new JButton("물품보관함 위치 안내");
+
+        btnFirstFloor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Floor1().setVisible(true);
+            }
+        });
+
+        btnSecondFloor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Floor2().setVisible(true);
+            }
+        });
+
+        btnThirdFloor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Floor3().setVisible(true);
+            }
+        });
+
+
+        restroomLocation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBlinkingStorage) {
+                    stopBlinking(btnStorage);
+                    isBlinkingStorage = false;
+                }
+                isBlinkingRestroom = !isBlinkingRestroom;
+                if (isBlinkingRestroom) {
+                    startBlinking(btnRestroom, 7);
+                } else {
+                    stopBlinking(btnRestroom);
+                }
+            }
+        });
+
+        boxLocation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBlinkingRestroom) {
+                    stopBlinking(btnRestroom);
+                    isBlinkingRestroom = false;
+                }
+                isBlinkingStorage = !isBlinkingStorage;
+                if (isBlinkingStorage) {
+                    startBlinking(btnStorage, 7);
+                } else {
+                    stopBlinking(btnStorage);
+                }
+            }
+        });
+
+
+        buttonPanel.add(btnFirstFloor);
+        buttonPanel.add(btnSecondFloor);
+        buttonPanel.add(btnThirdFloor);
+        buttonPanel.add(restroomLocation);
+        buttonPanel.add(boxLocation);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+        cardLayout.show(mainPanel2, "Map");
+    }
+    
+
+    private JPanel createMapPanel() {
+        JPanel mapPanel = new JPanel();
+        mapPanel.setLayout(null); // Use absolute positioning for custom layout
+
+        // Create buttons for each store
+        int buttonSize = 150; // Increased button size
+        int spacing = 150; // Adjust spacing
+        int offsetX = 300; // Move to the right
+        int offsetY = 100; // Move down
+
+        JButton btnAdidas = createCustomButton("아디다스");
+        btnAdidas.setBounds(offsetX, offsetY, buttonSize, buttonSize);
+        btnAdidas.addActionListener(new StoreButtonListener("Adidas"));
+        applyRollOverEffect(btnAdidas); // Apply dramatic effect
+        mapPanel.add(btnAdidas);
+        
+       
+
+        JButton btnNike = createCustomButton("나이키");
+        btnNike.setBounds(offsetX, offsetY + spacing, buttonSize, buttonSize);
+        btnNike.addActionListener(new StoreButtonListener("Nike"));
+        applyRollOverEffect(btnNike); // Apply dramatic effect
+        mapPanel.add(btnNike);
+
+        JButton btnNG = createCustomButton("내셔널\n 지오그래픽");
+        btnNG.setBounds(offsetX, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnNG.addActionListener(new StoreButtonListener("National Geographic"));
+        applyRollOverEffect(btnNG); // Apply dramatic effect
+        mapPanel.add(btnNG);
+
+        JButton btnNewbalance = createCustomButton("뉴발란스");
+        btnNewbalance.setBounds(offsetX + spacing, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnNewbalance.addActionListener(new StoreButtonListener("New Balance"));
+        applyRollOverEffect(btnNewbalance); // Apply dramatic effect
+        mapPanel.add(btnNewbalance);
+
+        JButton btnDiscovery = createCustomButton("디스커버리");
+        btnDiscovery.setBounds(offsetX + 2 * spacing, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnDiscovery.addActionListener(new StoreButtonListener("Discovery"));
+        applyRollOverEffect(btnDiscovery); // Apply dramatic effect
+        mapPanel.add(btnDiscovery);
+
+        JButton btn66 = createCustomButton("information");
+        btn66.setBounds(offsetX + 2 * spacing, offsetY, buttonSize, buttonSize);
+        btn66.addActionListener(new StoreButtonListener("information"));
+        applyRollOverEffect(btn66); // Apply dramatic effect
+        mapPanel.add(btn66);
+
+        JButton btnZara = createCustomButton("ZARA");
+        btnZara.setBounds(offsetX + 3 * spacing, offsetY, buttonSize, buttonSize);
+        btnZara.addActionListener(new StoreButtonListener("ZARA"));
+        applyRollOverEffect(btnZara); // Apply dramatic effect
+        mapPanel.add(btnZara);
+
+        JButton btnLacoste = createCustomButton("라코스테");
+        btnLacoste.setBounds(offsetX + 3 * spacing, offsetY + 2 * spacing, buttonSize, buttonSize);
+        btnLacoste.addActionListener(new StoreButtonListener("lacoste"));
+        applyRollOverEffect(btnLacoste); // Apply dramatic effect
+        mapPanel.add(btnLacoste);
+        
+        btnRestroom = createCustomButton("🚻");
+        btnRestroom.setBounds(offsetX + 4 * spacing, offsetY, 75, buttonSize); // Adjusted restroom size
+        Font buttonFont = btnRestroom.getFont();
+        Font newFont = new Font(buttonFont.getName(), buttonFont.getStyle(), 40);
+        btnRestroom.setFont(newFont);
+        btnRestroom.addActionListener(new StoreButtonListener("Restroom"));
+        applyRollOverEffect(btnRestroom);
+        mapPanel.add(btnRestroom);
+        
+        btnStorage = createCustomButton("Storage");
+        Font boxFont = btnStorage.getFont();
+        Font BoxFont = new Font(boxFont.getName(), boxFont.getStyle(), 7); // Adjust the font size here
+        btnStorage.setFont(BoxFont);
+        btnStorage.addActionListener(new StoreButtonListener("Storage"));
+        btnStorage.setBounds(offsetX + spacing , offsetY + spacing, 50, 50); // Adjusted position
+        mapPanel.add(btnStorage);
+        
+        // Draw lines to separate the buttons
+        int lineThickness = 15; // Increased line thickness
+        mapPanel.add(createSeparator(offsetX, offsetY + buttonSize, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX, offsetY + buttonSize + spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 2 * spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize + 2 * spacing, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 2 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 3 * spacing, offsetY + buttonSize, buttonSize, lineThickness));
+        mapPanel.add(createSeparator(offsetX + 4 * spacing, offsetY + buttonSize, 50, lineThickness));
+
+        return mapPanel;
+    }
+
+
+    private JPanel createFloorNavigationPanel() {
+        JPanel floorNavPanel = new JPanel();
+        JButton firstFloorBtn = new JButton("1층");
+        JButton secondFloorBtn = new JButton("2층");
+        JButton thirdFloorBtn = new JButton("3층");
+
+        firstFloorBtn.addActionListener(e -> cardLayout.show(mainPanel2, "Map"));
+        secondFloorBtn.addActionListener(e -> new Floor2().setVisible(true));
+        thirdFloorBtn.addActionListener(e -> new Floor3().setVisible(true));
+
+        floorNavPanel.add(firstFloorBtn);
+        floorNavPanel.add(secondFloorBtn);
+        floorNavPanel.add(thirdFloorBtn);
+
+        return floorNavPanel;
+    }
+    
+   	private JPanel createFirstFloorPanel() {
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("First Floor"));
+        return panel;
+    }
+
+   	private void addStorePanels() {   
+   		ImageIcon adidasImage = new ImageIcon("img/adidas.png");
+   		Image img1 = adidasImage.getImage();
+    	Image newImg1 = img1.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+    	adidasImage = new ImageIcon(newImg1);
+	    mainPanel2.add(createStorePanel1(adidasImage, "Aidas"), "Adidas");
+	   
+	      
+	   ImageIcon nikeImage = new ImageIcon("img/nike.png");
+		Image img2 = nikeImage.getImage();
+    	Image newImg2 = img2.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+    	nikeImage = new ImageIcon(newImg2);
+	   mainPanel2.add(createStorePanel2(nikeImage, "This is 나이키 store."), "Nike");
+	   
+	   ImageIcon NGImage = new ImageIcon("img/ng.png");
+	   Image img3 = NGImage.getImage();
+	   Image newImg3 = img3.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+	   NGImage = new ImageIcon(newImg3);
+	   mainPanel2.add(createStorePanel3(NGImage, "This is National Geographic store."), "National Geographic");
+	   
+	   ImageIcon NBImage = new ImageIcon("/img/nb.png");
+	   Image img4 = NBImage.getImage();
+	   Image newImg4 = img4.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+	   NBImage = new ImageIcon(newImg4);
+	   mainPanel2.add(createStorePanel4(NBImage, "This is 뉴발란스 store."), "New Balance");
+	   
+	   ImageIcon disImage = new ImageIcon("img/discovery.png");
+	   Image img5 = disImage.getImage();
+	   Image newImg5 = img5.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+	   disImage = new ImageIcon(newImg5);
+	   mainPanel2.add(createStorePanel5(disImage, "This is Discovery store."), "Discovery");
+	   
+	   ImageIcon zaraImage = new ImageIcon("img/zara.png");
+	   Image img6 = zaraImage.getImage();
+	   Image newImg6 = img6.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+	   zaraImage = new ImageIcon(newImg6);
+	   mainPanel2.add(createStorePanel6(zaraImage, "This is ZARA store."), "ZARA");
+	   
+	   ImageIcon infoImage = new ImageIcon("img/information.png");
+	   Image img7 = infoImage.getImage();
+	   Image newImg7 = img7.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+	   infoImage = new ImageIcon(newImg7);
+	   mainPanel2.add(createStorePanel7(infoImage, "This is information desk."), "information");
+	  
+	   ImageIcon lacostImage = new ImageIcon("img/lacoste.png");
+	   Image img8 = lacostImage.getImage();
+	   Image newImg8 = img8.getScaledInstance(650, 450, Image.SCALE_SMOOTH);
+	   lacostImage = new ImageIcon(newImg8);
+	   mainPanel2.add(createStorePanel8(lacostImage, "This is lacost store."), "lacoste");
+		}
+		
+		
+		private JPanel createStorePanel1(ImageIcon adidasImage, String str2) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(adidasImage));
+
+	     JButton adidasButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(adidasButton, "매장 정보 바로가기");
+
+	  	adidasButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		private JPanel createStorePanel2(ImageIcon nikemage, String str1) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(nikemage));
+		 JButton nikeButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(nikeButton, "매장 정보 바로가기");
+
+	  	nikeButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		
+		private JPanel createStorePanel3(ImageIcon NGImage, String str1) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(NGImage));
+
+		 JButton ngButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(ngButton, "매장 정보 바로가기");
+
+	  	 ngButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		private JPanel createStorePanel4(ImageIcon NBImage, String str3) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(NBImage));
+		 JButton nbButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(nbButton, "매장 정보 바로가기");
+
+	  	nbButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		private JPanel createStorePanel5(ImageIcon disImage, String str4) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(disImage));
+		 JButton disButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(disButton, "매장 정보 바로가기");
+
+	  	disButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		private JPanel createStorePanel6(ImageIcon zaraImage, String str5) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(zaraImage));
+		 JButton zaraButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(zaraButton, "매장 정보 바로가기");
+
+	  	zaraButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		private JPanel createStorePanel7(ImageIcon infoImage, String str6) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(infoImage));
+		 
+		 JButton infoButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(infoButton, "매장 정보 바로가기");
+
+	  	 infoButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+		
+		private JPanel createStorePanel8(ImageIcon lacosteImage, String str7) {
+		 JPanel panel = new JPanel();
+		 panel.add(new JLabel(lacosteImage));
+		 
+		 JButton lacosteButton = new JButton("매장 정보 바로가기");
+	  	 panel.add(lacosteButton, "매장 정보 바로가기");
+
+	  	lacosteButton.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		          //경로 
+		      }
+		  });
+		 return panel;
+		}
+
+   
+    private JButton createCustomButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("나눔 고딕", Font.PLAIN, 20));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        return button;
+    }
+
+    private void applyRollOverEffect(JButton button) {
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setFont(button.getFont().deriveFont(Font.BOLD, 26f)); // Larger font size for dramatic effect
+                button.setBackground(new Color(158, 188, 219)); // Highlight the button
+                button.setOpaque(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setFont(button.getFont().deriveFont(Font.PLAIN, 20f)); // Revert font size
+                button.setBackground(UIManager.getColor("Button.background")); // Revert button color
+                button.setOpaque(false);
+            }
+        });
+    }
+
+    private JLabel createSeparator(int x, int y, int width, int height) {
+        JLabel separator = new JLabel();
+        separator.setOpaque(true);
+        separator.setBackground(Color.BLACK);
+        separator.setBounds(x, y, width, height);
+        return separator;
+    }
+    private void startBlinking(JButton button, int duration) {
+        Timer blinkTimer = new Timer(500, new ActionListener() {
+            private int counter = 0;
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (counter < duration * 2) {
+                    button.setVisible(!button.isVisible());
+                    counter++;
+                } else {
+                    button.setVisible(true);
+                    ((Timer) e.getSource()).stop();
+                }
+            }
+        });
+        blinkTimer.start();
+
+        if (button == btnRestroom) {
+            blinkTimerRestroom = blinkTimer;
+        } else if (button == btnStorage) {
+            blinkTimerStorage = blinkTimer;
+        }
+    }
+
+    private void stopBlinking(JButton button) {
+        if (button == btnRestroom && blinkTimerRestroom != null) {
+            blinkTimerRestroom.stop();
+            btnRestroom.setVisible(true);
+        } else if (button == btnStorage && blinkTimerStorage != null) {
+            blinkTimerStorage.stop();
+            btnStorage.setVisible(true);
+        }
+    }
+
+    private class StoreButtonListener implements ActionListener {
+        private String storeName;
+
+        public StoreButtonListener(String storeName) {
+            this.storeName = storeName;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (storeName.equals("Restroom")) {
+                if (isBlinkingStorage) {
+                    stopBlinking(btnStorage);
+                    isBlinkingStorage = false;
+                }
+                isBlinkingRestroom = !isBlinkingRestroom;
+                if (isBlinkingRestroom) {
+                    startBlinking(btnRestroom, 7);
+                } else {
+                    stopBlinking(btnRestroom);
+                }
+            } else if (storeName.equals("Storage")) {
+                if (isBlinkingRestroom) {
+                    stopBlinking(btnRestroom);
+                    isBlinkingRestroom = false;
+                }
+                isBlinkingStorage = !isBlinkingStorage;
+                if (isBlinkingStorage) {
+                    startBlinking(btnStorage, 7);
+                } else {
+                    stopBlinking(btnStorage);
+                }
+            } else {
+                cardLayout.show(mainPanel2, storeName);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Floor2 floor2 = new Floor2();
+            floor2.setVisible(true);
+        });
+    }
+}
+
+
